@@ -1,16 +1,13 @@
 package utils
 
 import (
-	"address-book-server-v2/internal/core/config"
 	"time"
 
 	"github.com/golang-jwt/jwt/v5"
 )
 
-func GenerateToken(serverCfg *config.ServerConfig, userID uint, userEmail string) (string, error) {
+func GenerateToken(jwtSecret string, userID uint64, userEmail string) (string, error) {
 	
-	jwtSecret := serverCfg.JwtSecret
-
 	claims := jwt.MapClaims{
 		"user_id": userID,
 		"user_email": userEmail,
