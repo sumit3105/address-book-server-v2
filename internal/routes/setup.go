@@ -14,9 +14,9 @@ func Setup(app *application.App) *gin.Engine {
 
 	r.Static("/downloads", "./exports")
 
-	r = setupAuthRoutes(r)
+	r = setupAuthRoutes(r, app.Cfg.ServerCfg, app.DB)
 
-	r = setUpAddressRoutes(r, app.Cfg.ServerCfg)
+	r = setUpAddressRoutes(r, app.Cfg.ServerCfg, app.Cfg.SMTPCfg, app.DB)
 
 	return r
 }

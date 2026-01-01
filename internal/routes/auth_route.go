@@ -1,18 +1,22 @@
 package routes
 
-import "github.com/gin-gonic/gin"
+import (
+	"address-book-server-v2/internal/controllers"
+	"address-book-server-v2/internal/core/config"
 
-func setupAuthRoutes(r *gin.Engine) *gin.Engine {
-	
-	// userRepo := repositories.NewUserRepository(db.DB)
-	// authService := services.NewAuthService(userRepo)
-	// authController := controllers.NewAuthController(authService)
+	"github.com/gin-gonic/gin"
+	"gorm.io/gorm"
+)
 
-	// auth := r.Group("/auth")
-	// {
-	// 	// auth.POST("/register", authController.Register)
-	// 	// auth.POST("/login", authController.Login)
-	// }
+func setupAuthRoutes(r *gin.Engine, serverCfg *config.ServerConfig, db *gorm.DB) *gin.Engine {
+
+	authController := controllers.NewAuthController(serverCfg, db)
+
+	auth := r.Group("/auth")
+	{
+		auth.POST("/register", authController.Register)
+		auth.POST("/login", authController.Login)
+	}
 
 	return r
 }
