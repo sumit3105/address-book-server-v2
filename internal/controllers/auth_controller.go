@@ -3,6 +3,7 @@ package controllers
 import (
 	"address-book-server-v2/internal/common/fault"
 	"address-book-server-v2/internal/common/utils"
+	"address-book-server-v2/internal/common/validators"
 	"address-book-server-v2/internal/core/config"
 	"address-book-server-v2/internal/models"
 	"address-book-server-v2/internal/services"
@@ -42,6 +43,12 @@ func (c *AuthController) Register(ctx *gin.Context) {
 		utils.Error(ctx, 400, fault.NewValidationError(utils.FormatValidationErrors(err)))
 		return
 	}
+
+	score := validators.PasswordStrengthScore(req.Password)
+	if score < 70 {
+		utils.Error(ctx, 400, fault.BadRequest("Weak Password", nil))
+	}
+
 
 	if err := c.authService.Register(req.Email, req.Password); err != nil {
 		utils.Error(ctx, 400, err)

@@ -2,6 +2,7 @@ package application
 
 import (
 	logger "address-book-server-v2/internal/common/log"
+	"address-book-server-v2/internal/common/validators"
 	"address-book-server-v2/internal/core/config"
 	"fmt"
 	"os"
@@ -28,6 +29,9 @@ func NewApp() *App {
 	// Connect DB and Migrate
 	db := connect(cfg)
 	// a.DB.AutoMigrate(&models.User{}, &models.Address{})
+
+	// Register validators
+	validators.RegisterAll() 
 
 	return &App{
 		Cfg: cfg,

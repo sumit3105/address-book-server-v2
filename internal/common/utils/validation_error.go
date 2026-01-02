@@ -22,7 +22,7 @@ func FormatValidationErrors(err error) map[string]string {
 		case "required":
 			errors[field] = "This field is required"
 
-		case "email":
+		case "strict_email":
 			errors[field] = "Invalid email format"
 
 		case "min":
@@ -30,6 +30,12 @@ func FormatValidationErrors(err error) map[string]string {
 
 		case "password":
 			errors[field] = "Password must be at least 8 characters and include uppercase, lowercase, number, and special character"
+		
+		case "phone":
+			errors[field] = "Invalid phone number format"
+		
+		case "pincode":
+			errors[field] = "Invalid pincode format"
 
 		default:
 			errors[field] = "Invalid value"
