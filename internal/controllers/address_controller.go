@@ -6,6 +6,7 @@ import (
 	"address-book-server-v2/internal/core/config"
 	"address-book-server-v2/internal/models"
 	"address-book-server-v2/internal/services"
+	// "fmt"
 	"net/http"
 	"strconv"
 
@@ -36,7 +37,7 @@ func NewAddressController(serverCfg *config.ServerConfig, smtpCfg *config.SMTPCo
 
 func (c *AddressController) Create(ctx *gin.Context) {
 	userID := ctx.GetUint64("user_id")
-
+	// fmt.Println("======================================>", userID)
 	var address models.CreateAddressRequest
 	if err := ctx.ShouldBindJSON(&address); err != nil {
 		utils.Error(ctx, http.StatusBadRequest, fault.BadRequest(

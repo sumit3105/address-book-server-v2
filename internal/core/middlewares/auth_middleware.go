@@ -40,7 +40,7 @@ func AuthMiddleware(serverCfg *config.ServerConfig) gin.HandlerFunc {
 		}
 
 		claims := token.Claims.(jwt.MapClaims)
-		userID := uint(claims["user_id"].(float64))
+		userID := uint64(claims["user_id"].(float64))
 		userEmail := string(claims["user_email"].(string))
 
 		c.Set("user_id", userID)

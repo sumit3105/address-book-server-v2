@@ -47,6 +47,7 @@ func (c *AuthController) Register(ctx *gin.Context) {
 	score := validators.PasswordStrengthScore(req.Password)
 	if score < 70 {
 		utils.Error(ctx, 400, fault.BadRequest("Weak Password", nil))
+		return
 	}
 
 
