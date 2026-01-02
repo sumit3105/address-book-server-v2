@@ -22,7 +22,7 @@ func setUpAddressRoutes(r *gin.Engine, serverCfg *config.ServerConfig, smtpCfg *
 		addresses.GET("", addressController.GetAll)
 		addresses.GET("/filter", addressController.GetFiltered)
 		addresses.GET("/:id", addressController.GetByID)
-		addresses.GET("/export/", addressController.ExportCustom)
+		addresses.POST("/export/", addressController.ExportCustom)
 		addresses.PUT("/:id", addressController.Update)
 		addresses.DELETE("/:id", addressController.Delete)
 	}

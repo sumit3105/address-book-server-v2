@@ -1,15 +1,15 @@
 package application
 
 import (
-	logger "address-book-server-v2/internal/common/log"
-	"address-book-server-v2/internal/common/validators"
+	"address-book-server-v2/internal/common/log"
+	"address-book-server-v2/internal/common/utils"
 	"address-book-server-v2/internal/core/config"
-	"fmt"
+	"address-book-server-v2/internal/core/database"
+	"address-book-server-v2/internal/models"
 	"os"
 
 	"github.com/joho/godotenv"
 	"go.uber.org/zap"
-	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 )
 
@@ -23,15 +23,15 @@ func NewApp() *App {
 	logger.InitLogger()
 	defer logger.Logger.Sync()
 
+	// Init validator
+	utils.InitValidator()
+
 	// Load config
 	cfg := load()
 
 	// Connect DB and Migrate
-	db := connect(cfg)
-	// a.DB.AutoMigrate(&models.User{}, &models.Address{})
-
-	// Register validators
-	validators.RegisterAll() 
+	db := database.Connect(cfg)
+	db.AutoMigrate(&models.User{}, &models.Address{})
 
 	return &App{
 		Cfg: cfg,
@@ -85,24 +85,4 @@ func getEnv(key string) string {
 
 	}
 	return value
-}
-
-func connect(cfg *config.Config) *gorm.DB {
-	dsn := fmt.Sprintf(
-		"host=%s port=%s user=%s password=%s dbname=%s sslmode=disable",
-		cfg.DBCfg.DBHost,
-		cfg.DBCfg.DBPort,
-		cfg.DBCfg.DBUser,
-		cfg.DBCfg.DBPassword,
-		cfg.DBCfg.DBName,
-	)
-
-	database, err := gorm.Open(postgres.Open(dsn), &gorm.Config{})
-	if err != nil {
-		logger.Logger.Fatal("failed to connect to database", zap.Error(err))
-	}
-
-	logger.Logger.Info("database connected")
-
-	return database
 }

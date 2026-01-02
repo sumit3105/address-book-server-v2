@@ -37,6 +37,7 @@ func NewAddressService(db *gorm.DB, serverCfg *config.ServerConfig, smtpCfg *con
 func (s *AddressService) Create(userID uint64, req *models.CreateAddressRequest) error {
 
 	address := &models.Address{
+		UserID: userID,
 		FirstName: req.FirstName,
 		LastName: req.LastName,
 		Email: req.Email,
@@ -213,31 +214,28 @@ func (s *AddressService) ExportAddressesCustomAsync(
 			return
 		}
 
-		// 2. Convert addresses into [][]string based on requested fields
-		// rows := utils.FilterAddressFields(addresses, fields)
-
-		// 3. Generate CSV from filtered data
+		// 2. Generate CSV from filtered data
 		filePath, fileName, err := utils.GenerateCustomAddressesCSV(userID, fields, addresses)
 		if err != nil {
 			logger.Logger.Error("failed to generate custom csv", zap.Error(err))
 			return
 		}
 
-		// Create download URL
+		// 3. Create download URL
 		downloadURL := fmt.Sprintf(
 			"%s/downloads/%s",
 			s.serverCfg.AppURL,
 			fileName,
 		)
 
-		// Email with ATTACHMENT + LINK
+		// 4. Email with ATTACHMENT + LINK
 		emailBody := fmt.Sprintf(
 			"Attached is the custom address report you requested.\n\n"+
 				"You can also download it using the link below:\n%s",
 			downloadURL,
 		)
 
-		// 4. Email with attachment
+		// 5. Email with attachment
 		err = utils.SendEmailWithAttachment(
 			s.smtpCfg.SMTPHost,
 			s.smtpCfg.SMTPPort,

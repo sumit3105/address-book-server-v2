@@ -55,7 +55,7 @@ func (r *AddressRepository) FindAllForExport(fields []string, userID uint64) ([]
 
 	var results []map[string]interface{}
 
-	err := r.db.
+	err := r.db.Model(&models.Address{}).
 		Select(fields).
 		Where("user_id = ?", userID).
 		Find(&results).
